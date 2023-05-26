@@ -7,6 +7,13 @@ class Circle:
   radius: float
   
   """
+  As a side effect of assuming read-only, we can freeze the dataclass instead of relying on a protected naming convention and a property
+  """
+#   @property
+#   def radius(self) -> float:
+#     return self._radius
+
+  """
   Under normal circumstances this is a smell indicating _radius should be public instead;
   I'm going to assume that the assignment's underlying intention was that radius be read-only,
   and comment out this setter
@@ -14,13 +21,6 @@ class Circle:
 #   @radius.setter
 #   def radius(self, radius_value_in_unknown_units: float) -> None:
 #    self._radius = radius_value_in_unknown_units
-
-  """
-  As a side effect of assuming read-only, we can freeze the dataclass instead of relying on a protected naming convention and a property
-  """
-#   @property
-#   def radius(self) -> float:
-#     return self._radius
 
   @property
   def diameter(self) -> float:

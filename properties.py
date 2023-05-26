@@ -1,6 +1,7 @@
 from dataclasses import dataclass, FrozenInstanceError
 from math import pi
 from warnings import warn
+from functools import cached_property
 
 @dataclass(frozen=True)
 class Circle:
@@ -22,17 +23,25 @@ class Circle:
 #   def radius(self, radius_value_in_unknown_units: float) -> None:
 #    self._radius = radius_value_in_unknown_units
 
-  @property
+  @cached_property
   def diameter(self) -> float:
+    print('Calculating diameter')
     return 2 * self.radius
   
-  @property
+  @cached_property
   def area(self) -> float:
+    print('Calculating area')
     return pi * self.radius ** 2
   
-  @property
+  @cached_property
   def circumference(self) -> float:
+    print('Calculating circumference')
     return 2 * pi * self.radius
+  
+  def print_properties(self) -> None:
+    print("Diameter:", self.diameter)
+    print("Area:", self.area)
+    print("Circumference:", self.circumference)
 
 
 # Create an instance of Circle
@@ -47,6 +56,6 @@ try:
   print(f"New radius: {circle.radius}")
 except FrozenInstanceError:
   print('Good job freezing your dataclass!')
-print("Diameter:", circle.diameter)
-print("Area:", circle.area)
-print("Circumference:", circle.circumference)
+circle.print_properties()
+print("Verifying that values are not recalculated...")
+circle.print_properties()

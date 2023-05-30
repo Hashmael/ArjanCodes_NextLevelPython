@@ -1,14 +1,13 @@
-from typing import Sequence
-from numbers import Number
+from typing import Collection
 
-def calculate_average(numbers: Sequence[Number]) -> Number:
+def calculate_average(numbers: Collection[int | float]) -> int | float:
   total = sum(numbers)
   return total / len(numbers)
 
-def calculate_total_sales(sales: dict[str, Number]) -> Number:
+def calculate_total_sales(sales: dict[str, int | float]) -> int | float:
   return sum(sales.values())
 
-def main():
+def main() -> None:
   data = [1, 2, 3, 4, 5]
   average = calculate_average(data)
   print("The average is:", average)

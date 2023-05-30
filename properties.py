@@ -1,27 +1,27 @@
-from dataclasses import dataclass, FrozenInstanceError
+from dataclasses import dataclass
 from math import pi
-from warnings import warn
 from functools import cached_property
+import random
 
-@dataclass(frozen=True)
+@dataclass
 class Circle:
-  radius: float
+  _radius: float
   
-  """
-  As a side effect of assuming read-only, we can freeze the dataclass instead of relying on a protected naming convention and a property
-  """
-#   @property
-#   def radius(self) -> float:
-#     return self._radius
 
-  """
-  Under normal circumstances this is a smell indicating _radius should be public instead;
-  I'm going to assume that the assignment's underlying intention was that radius be read-only,
-  and comment out this setter
-  """
-#   @radius.setter
-#   def radius(self, radius_value_in_unknown_units: float) -> None:
-#    self._radius = radius_value_in_unknown_units
+  @property
+  def radius(self) -> float:
+    return self._radius
+
+
+  @radius.setter
+  def radius(self, radius_value: float) -> None:
+   if radius_value < 0:
+     raise ValueError('Radius must be a non-negative number')
+   self._radius = radius_value
+   # Clear the cached properties whenever the radius changes
+   del self.area
+   del self.circumference
+   del self.diameter
 
   @cached_property
   def diameter(self) -> float:
@@ -39,23 +39,32 @@ class Circle:
     return 2 * pi * self.radius
   
   def print_properties(self) -> None:
+    print("Radius:", self.radius)
     print("Diameter:", self.diameter)
     print("Area:", self.area)
     print("Circumference:", self.circumference)
 
+def test_radius_setter_valid(circle: Circle) -> None:
+  new_radius = circle.radius + 1
+  circle.radius = new_radius
+  assert circle.radius == new_radius
 
-# Create an instance of Circle
-circle = Circle(5)
+def test_radius_setter_invalid(circle: Circle) -> None:
+  try:
+    circle.radius = float(random.choice(range(-1024, -1)))
+    raise ValueError('Circle class does not validate for negative radius values')
+  except ValueError:
+    print('Circle class validates for negative radius values')
 
-# Test the properties
-print("Radius:", circle.radius)
-# Per comments above
-try:
-  circle.radius = 10
-  warn('Are you sure that you want Circle\'s radius attribute to be mutable?')
-  print(f"New radius: {circle.radius}")
-except FrozenInstanceError:
-  print('Good job freezing your dataclass!')
-circle.print_properties()
-print("Verifying that values are not recalculated...")
-circle.print_properties()
+def test_circle_class() -> None:
+  circle = Circle(5)
+  circle.print_properties()
+  test_radius_setter_invalid(circle)
+  test_radius_setter_valid(circle)
+  print("Check this output to ensure that values are recalculated after changing the radius...")
+  circle.print_properties()
+  print("Check this output to ensure that values are *not* recalculated...")
+  circle.print_properties()
+
+if __name__ == '__main__':
+  test_circle_class()

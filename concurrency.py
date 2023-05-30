@@ -12,7 +12,7 @@ async def main() -> None:
     "https://www.google.com",
     "https://www.python.org",
   ]
-  data = await asyncio.gather(*[fetch_data(url) for url in urls])
+  data = await asyncio.gather(*map(fetch_data, urls))
   print(f'{datetime.datetime.now():%H:%M:%S:%f}: Collected all data')
   for datum in data:
     print(datum)

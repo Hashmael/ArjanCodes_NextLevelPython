@@ -16,21 +16,21 @@ SOLUTION_PRICES = (Decimal("300.00"), Decimal("180.00"))
 class Order:
   product: str
   quantity: int
-  price: Decimal
+  unit_price: Decimal
 
   @property
   def total_price(self) -> Decimal:
     """
     Encapsulate to the order
     """
-    return self.quantity * self.price
+    return self.quantity * self.unit_price
 
 def main() -> None:
   sales_orders = [
-    Order(product="A", quantity=5, price=Decimal("60.00")),
-    Order(product="B", quantity=3, price=Decimal("15.00")),
-    Order(product="C", quantity=2, price=Decimal("20.00")),
-    Order(product="D", quantity=4, price=Decimal("45.00")),
+    Order(product="A", quantity=5, unit_price=Decimal("60.00")),
+    Order(product="B", quantity=3, unit_price=Decimal("15.00")),
+    Order(product="C", quantity=2, unit_price=Decimal("20.00")),
+    Order(product="D", quantity=4, unit_price=Decimal("45.00")),
   ]
 
   # Use a generator expression to generate a sequence of total prices for each sales order
